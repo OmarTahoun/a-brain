@@ -11,11 +11,11 @@ Disclaimer: this is for the purpose of learning, currently it's not so optimal b
   1. Input Layer
   2. Hidden Layer (working on making it have multuple hidden layers)
   3. Output Layer
-  ### - Weights:
+### - Weights:
   1. The weights are randomized to value between -1 and 1.
   2. The Deltas for the weights are calculated after each iteration.
   3. The weights are then update.
-  ### - Activation: _sigmoid_
+### - Activation: _sigmoid_
   Planing to add more in the future _**(relu, tanh, softmax)**_
     
   
