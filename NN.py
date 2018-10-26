@@ -30,9 +30,9 @@ class NeuralNetwork:
     def acc(self, inputs, targets):
         #Running the inputs through the Neural network
         result = []
-        true = 0
         Hlayer_output = np.dot(inputs, self.weights_ih)
         Hlayer_output = sigmoid(Hlayer_output)
+
 
         output = np.dot(Hlayer_output, self.weights_ho)
         output = sigmoid(output)
@@ -57,43 +57,40 @@ class NeuralNetwork:
         Hlayer_output = np.dot(inputs, self.weights_ih)
         Hlayer_output = sigmoid(Hlayer_output)
 
+
         output = np.dot(Hlayer_output, self.weights_ho)
         output = sigmoid(output)
 
         #Rounding the outputs to the closest integer EX: output=0.979, then output = 1
-        for element in output:
-            for value in element:
-                result.append(int(round(value)))
-        return result
+        return output
 
 
 #Training the Neural Network Using Backpropagation
     def backpropagate(self, inputs, targets):
-        for i in range(self.num_epochs):
-            #feeding tht inputs forward trhough the Neural Network
-            Hlayer_output = np.dot(inputs, self.weights_ih)
-            Hlayer_output = sigmoid(Hlayer_output)
+        #feeding tht inputs forward trhough the Neural Network
+        Hlayer_output = np.dot(inputs, self.weights_ih)
+        Hlayer_output = sigmoid(Hlayer_output)
 
 
-            output = np.dot(Hlayer_output, self.weights_ho)
-            output = sigmoid(output)
+        output = np.dot(Hlayer_output, self.weights_ho)
+        output = sigmoid(output)
 
-            #Calculating the Error
-            output_errors = self.LR*(targets - output)
+        #Calculating the Error
+        output_errors = self.LR*(targets - output)
 
-            #Calculating the gradient of the output layer
-            gradient_output = output_errors * Dsigmoid(output)
-            #Calculating the deltas of the output layer weights
-            weightsHO_del = np.dot(Hlayer_output.T, gradient_output)
+        #Calculating the gradient of the output layer
+        gradient_output = output_errors * Dsigmoid(output)
+        #Calculating the deltas of the output layer weights
+        weightsHO_del = np.dot(Hlayer_output.T, gradient_output)
 
-            #calculating the hidden layer error
-            hidden_error = np.dot(self.LR*gradient_output, self.weights_ho.T)
+        #calculating the hidden layer error
+        hidden_error = np.dot(self.LR*gradient_output, self.weights_ho.T)
 
-            #Calculating the gradient of the hidden layer
-            gradient_hidden = hidden_error * Dsigmoid(Hlayer_output)
-            #Calculating the deltas of the hidden layer
-            weightIH__del = np.dot(inputs.T, gradient_hidden)
+        #Calculating the gradient of the hidden layer
+        gradient_hidden = hidden_error * Dsigmoid(Hlayer_output)
+        #Calculating the deltas of the hidden layer
+        weightIH__del = np.dot(inputs.T, gradient_hidden)
 
-            #updating the weights from the inputs layer to the hidden layer
-            self.weights_ih += weightIH__del
-            self.weights_ho += weightsHO_del
+        #updating the weights from the inputs layer to the hidden layer
+        self.weights_ih += weightIH__del
+        self.weights_ho += weightsHO_del
