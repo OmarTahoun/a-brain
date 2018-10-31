@@ -7,15 +7,20 @@ def get_data():
     images_train, labels_train = mndata.load_training()
     images_test, label_test = mndata.load_testing()
     return images_train, labels_train, images_test, label_test
-
+#Normalizing the Training and Testing data
 x_train, y_train, x_test, y_test = get_data()
+for i in range(len(x_train)):
+    x_train[i] = [x / 255.0 for x in x_train[i]]
+for i in range(len(x_test)):
+    x_test[i] = [x / 255.0 for x in x_test[i]]
 
-#setting the neural network
-nn = NeuralNetwork(784,16,10, num_epochs=2, Learning_rate = 0.2)
 
-#Trining the network o the inputs and outputs
+# Creating the neural network
+nn = NeuralNetwork(784,64,10, num_epochs=4, Learning_rate = 2)
+
+#Trining the network on the inputs and outputs
 for j in range(nn.num_epochs):
-    print("epoch: "+ str(j)+"\n")
+    print("\nepoch: "+ str(j+1)+"\n")
 
     #Going through all the photos
     for i, photo in enumerate(x_train):
@@ -23,7 +28,7 @@ for j in range(nn.num_epochs):
         targets = [0,0,0,0,0,0,0,0,0,0]
         label = y_train[i]
         targets[label] = 1
-        targets = targets = np.reshape(targets, (1,10))
+        targets = np.reshape(targets, (1,10))
         #Training using Backpropagation
         nn.backpropagate(inputs, targets)
 
@@ -32,11 +37,11 @@ for j in range(nn.num_epochs):
             print(str(i/600) + " % DONE")
 
 
-#Testing with test data
-result = nn.test(x_test[1200])
-guess = np.argmax(result)
-actual = y_test[1200]
+#calculating the accuracy of the neural network using the test inputs and test labels
+score  = nn.acc(x_test, y_test)
+print(score)
 
-#Printing the guess and the actual Label
-print("You guessed : " + str(guess))
-print("the actual result is: " + str(actual))
+
+
+#saving the module to json file for loading later
+nn.save("nn-file.json")
