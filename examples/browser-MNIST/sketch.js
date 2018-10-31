@@ -14,11 +14,11 @@ function preload() {
 //  Creating the canvas in for the user to draw.
 function setup() {
 	user_guess = select('.guess');
-	var cnv = createCanvas(224,224);
+	var cnv = createCanvas(448,448);
 	var x = (windowWidth - width) / 2;
 	var y = (windowHeight - height) / 2;
 	cnv.position(x, y);
-	user_digit = createGraphics(224, 224);
+	user_digit = createGraphics(448, 448);
 	user_digit.pixelDensity(1);
 
 	// calling the guessing function
@@ -28,12 +28,12 @@ function setup() {
 
 function draw() {
 	background(0);
-
+	image(user_digit, 0, 0);
 	// allowing the user to draw on the canvas
 	if (mouseIsPressed) {
 		user_has_drawing = true;
 		user_digit.stroke(255);
-		user_digit.strokeWeight(9);
+		user_digit.strokeWeight(18);
 		user_digit.line(mouseX, mouseY, pmouseX, pmouseY);
 
 		// calling the guessing function and getting the guess of the network
