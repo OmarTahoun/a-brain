@@ -1,6 +1,6 @@
 import numpy as np
 import random
-
+import json
 #Sigmoid Function
 def sigmoid(x):
     return 1.0/ (1+np.exp(-x))
@@ -10,7 +10,6 @@ def Dsigmoid(x):
     return x*(1.0-x)
 
 class NeuralNetwork:
-
 #The initialization of the Neural Network
     def __init__(self, input_size, num_hidden, output_size, num_epochs=1500, Learning_rate = 0.1):
         #Setting up the Neural Network
@@ -24,30 +23,28 @@ class NeuralNetwork:
         #Randomizing the weights
         self.weights_ih = 2*np.random.rand(self.num_inputs,self.num_hidden)-1
         self.weights_ho = 2*np.random.rand(self.num_hidden, self.num_output)-1
-        self.output = np.zeros(self.num_output)
+
 
 # A function to calculate the accuracy of the Neural Network
     def acc(self, inputs, targets):
-        #Running the inputs through the Neural network
-        result = []
-        Hlayer_output = np.dot(inputs, self.weights_ih)
-        Hlayer_output = sigmoid(Hlayer_output)
+        true = 0
+        #Going through all the photos
+        for i, photo in enumerate(inputs):
+            inputs  = np.reshape(photo, (1,784))
+            label = targets[i]
+            #Running the inputs through the Neural network
+            Hlayer_output = np.dot(inputs, self.weights_ih)
+            Hlayer_output = sigmoid(Hlayer_output)
 
+            output = np.dot(Hlayer_output, self.weights_ho)
+            output = sigmoid(output)
 
-        output = np.dot(Hlayer_output, self.weights_ho)
-        output = sigmoid(output)
+            guess = np.argmax(output)
+            if guess == label:
+                true += 1.0
 
-        #Comparing the result and the targets To Calculate the score
-        for element in output:
-            for value in element:
-                result.append(int(round(value)))
-
-        for i, element in enumerate(targets):
-            for value in element:
-                if value == result[i]:
-                    true += 1.0
-        score = true/len(result)
-        return score
+        score = true/len(targets)
+        return score*100
 
 
 #A function the test the neural network on a given set of inputs
@@ -94,3 +91,13 @@ class NeuralNetwork:
         #updating the weights from the inputs layer to the hidden layer
         self.weights_ih += weightIH__del
         self.weights_ho += weightsHO_del
+
+
+#Saves the trained module to a json file
+    def save(self, fileName):
+        new = self
+        new.weights_ih = self.weights_ih.tolist()
+        new.weights_ho = self.weights_ho.tolist()
+
+        with open(fileName, 'w') as outfile:
+            json.dump(new.__dict__, outfile)
